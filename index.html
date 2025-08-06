@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recetas de Cocina</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    #chat { display: none; } /* Chat oculto inicialmente */
+  </style>
+</head>
+<body>
+  <h1>Recetas Familiares</h1>
+  <div id="recetas">
+    <p>¡Bienvenido! Aquí encontrarás las recetas de la abuela...</p>
+  </div>
+
+  <!-- Chat oculto (activar con combinación de teclas) -->
+  <div id="chat">
+    <h3>Lista de Compras (solo lectura)</h3>
+    <div id="mensajes"></div>
+    <input type="text" id="inputMsg" placeholder="Ej: Leche, pan...">
+    <button onclick="enviarMensaje()">Agregar</button>
+  </div>
+
+  <script src="chat-secreto.js"></script> <!-- Código del chat -->
+</body>
+</html>
