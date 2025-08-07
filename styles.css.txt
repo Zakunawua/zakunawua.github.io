@@ -1,0 +1,4 @@
+tu-repo/
+├── index.html
+├── chat-secreto.js
+└── styles.css (opcional)
