@@ -4,23 +4,61 @@
   <title>Recetas de Cocina</title>
   <style>
     body { font-family: Arial; margin: 20px; }
-    #chat { display: none; } /* Chat oculto inicialmente */
+    #chat { display: none; margin-top: 20px; }
+    #mensajes { height: 200px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
   </style>
+  <!-- CryptoJS desde CDN (no necesitas subir este archivo) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
   <h1>Recetas Familiares</h1>
-  <div id="recetas">
-    <p>¡Bienvenido! Aquí encontrarás las recetas de la abuela...</p>
-  </div>
+  <p>Bienvenido a mi colección de recetas secretas...</p>
 
-  <!-- Chat oculto (activar con combinación de teclas) -->
+  <!-- Chat Oculto -->
   <div id="chat">
-    <h3>Lista de Compras (solo lectura)</h3>
+    <h3>Lista de Compras</h3>
     <div id="mensajes"></div>
-    <input type="text" id="inputMsg" placeholder="Ej: Leche, pan...">
-    <button onclick="enviarMensaje()">Agregar</button>
+    <input type="text" id="inputMsg" placeholder="Escribe aquí...">
+    <button onclick="enviarMensaje()">Guardar</button>
   </div>
 
-  <script src="chat-secreto.js"></script> <!-- Código del chat -->
+  <script>
+    // Clave de encriptación (cámbiala y guárdala en un lugar seguro)
+    const CLAVE = "mi-clave-secreta-32-caracteres";
+
+    // Activa el chat con Ctrl + Alt + M
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.altKey && e.key === 'm') {
+        const chat = document.getElementById('chat');
+        chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+
+    // Cargar mensajes al abrir la página
+    window.onload = function() {
+      const mensajesEncriptados = localStorage.getItem('mensajesChat');
+      if (mensajesEncriptados) {
+        const mensajesJSON = CryptoJS.AES.decrypt(mensajesEncriptados, CLAVE).toString(CryptoJS.enc.Utf8);
+        document.getElementById('mensajes').innerHTML = JSON.parse(mensajesJSON);
+      }
+    };
+
+    // Guardar mensajes
+    function enviarMensaje() {
+      const input = document.getElementById('inputMsg');
+      const mensaje = input.value.trim();
+      if (mensaje) {
+        const mensajesDiv = document.getElementById('mensajes');
+        mensajesDiv.innerHTML += `<p>${mensaje}</p>`;
+        
+        // Encriptar y guardar en localStorage
+        const mensajesHTML = mensajesDiv.innerHTML;
+        const mensajesEncriptados = CryptoJS.AES.encrypt(JSON.stringify(mensajesHTML), CLAVE).toString();
+        localStorage.setItem('mensajesChat', mensajesEncriptados);
+        
+        input.value = '';
+      }
+    }
+  </script>
 </body>
 </html>
