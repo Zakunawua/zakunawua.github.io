@@ -5,9 +5,25 @@
   <style>
     body { font-family: Arial; margin: 20px; }
     #chat { display: none; margin-top: 20px; }
-    #mensajes { height: 200px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
+    #mensajes { 
+      height: 200px; 
+      border: 1px solid #ccc; 
+      overflow-y: scroll; 
+      padding: 10px; 
+      margin-bottom: 10px;
+    }
+    #boton-borrar {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #boton-borrar:hover {
+      background-color: #ff5252;
+    }
   </style>
-  <!-- CryptoJS desde CDN (no necesitas subir este archivo) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
@@ -20,13 +36,13 @@
     <div id="mensajes"></div>
     <input type="text" id="inputMsg" placeholder="Escribe aquí...">
     <button onclick="enviarMensaje()">Guardar</button>
+    <button id="boton-borrar" onclick="borrarChat()">Borrar Chat</button> <!-- Botón nuevo -->
   </div>
 
   <script>
-    // Clave de encriptación (cámbiala y guárdala en un lugar seguro)
     const CLAVE = "mi-clave-secreta-32-caracteres";
 
-    // Activa el chat con Ctrl + Alt + M
+    // Activar chat con Ctrl + Alt + M
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.altKey && e.key === 'm') {
         const chat = document.getElementById('chat');
@@ -34,29 +50,43 @@
       }
     });
 
-    // Cargar mensajes al abrir la página
+    // Cargar mensajes al iniciar
     window.onload = function() {
+      cargarMensajes();
+    };
+
+    function cargarMensajes() {
       const mensajesEncriptados = localStorage.getItem('mensajesChat');
       if (mensajesEncriptados) {
         const mensajesJSON = CryptoJS.AES.decrypt(mensajesEncriptados, CLAVE).toString(CryptoJS.enc.Utf8);
-        document.getElementById('mensajes').innerHTML = JSON.parse(mensajesJSON);
+        if (mensajesJSON) {
+          document.getElementById('mensajes').innerHTML = JSON.parse(mensajesJSON);
+        }
       }
-    };
+    }
 
-    // Guardar mensajes
     function enviarMensaje() {
       const input = document.getElementById('inputMsg');
       const mensaje = input.value.trim();
       if (mensaje) {
         const mensajesDiv = document.getElementById('mensajes');
         mensajesDiv.innerHTML += `<p>${mensaje}</p>`;
-        
-        // Encriptar y guardar en localStorage
-        const mensajesHTML = mensajesDiv.innerHTML;
-        const mensajesEncriptados = CryptoJS.AES.encrypt(JSON.stringify(mensajesHTML), CLAVE).toString();
-        localStorage.setItem('mensajesChat', mensajesEncriptados);
-        
+        guardarMensajes();
         input.value = '';
+      }
+    }
+
+    function guardarMensajes() {
+      const mensajesHTML = document.getElementById('mensajes').innerHTML;
+      const mensajesEncriptados = CryptoJS.AES.encrypt(JSON.stringify(mensajesHTML), CLAVE).toString();
+      localStorage.setItem('mensajesChat', mensajesEncriptados);
+    }
+
+    // Función para borrar el chat
+    function borrarChat() {
+      if (confirm("¿Borrar todos los mensajes?")) {
+        localStorage.removeItem('mensajesChat');
+        document.getElementById('mensajes').innerHTML = "";
       }
     }
   </script>
