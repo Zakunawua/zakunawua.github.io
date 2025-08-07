@@ -1,6 +1,12 @@
-// Ofuscar mensaje al escribir (ejemplo básico)
-function ofuscar(texto) {
-  const mapa = { "A": "P", "B": "Q", "C": "R", ... };
-  return texto.split('').map(letra => mapa[letra] || letra).join('');
-}
-// Al enviar, se transmite el texto REAL cifrado.
+// chat-secreto.js
+document.addEventListener('keydown', function(event) {
+  // Verifica si se presionaron Ctrl + Alt + M (código de tecla 77 es 'M')
+  if (event.ctrlKey && event.altKey && event.keyCode === 77) {
+    const chat = document.getElementById('chat');
+    chat.style.display = chat.style.display === 'none' ? 'block' : 'none'; // Alternar visibilidad
+    event.preventDefault(); // Evita que el navegador haga algo extraño
+  }
+});
+
+// Opcional: Asegúrate de que el chat esté oculto al inicio
+document.getElementById('chat').style.display = 'none';
