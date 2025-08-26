@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recetas de Cocina Familiares</title>
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --secondary-color: #FF9800;
+      --accent-color: #F44336;
+      --light-color: #F5F5F5;
+      --dark-color: #333;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--dark-color);
+      background-color: #f9f9f9;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--primary-color) 0%, #2E7D32 100%);
+      color: white;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tagline {
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+    
+    .chat-status {
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    
+    .recipes-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 2rem;
+    }
+    
+    .recipe-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease;
+    }
+    
+    .recipe-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .recipe-img {
+      height: 200px;
+      background-color: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      font-style: italic;
+    }
+    
+    .recipe-content {
+      padding: 1.5rem;
+    }
+    
+    .recipe-title {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    
+    .recipe-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #777;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    
+    .recipe-description {
+      margin-bottom: 1rem;
+    }
+    
+    .recipe-link {
+      display: inline-block;
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .recipe-link:hover {
+      text-decoration: underline;
+    }
+    
+    #chat {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-top: 2rem;
+      display: none;
+    }
+    
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    
+    #mensajes {
+      height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: var(--light-color);
+    }
+    
+    .message {
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      border-radius: 18px;
+      background-color: #E8F5E9;
+      max-width: 80%;
+      animation: fadeIn 0.3s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .chat-input-container {
+      display: flex;
+      gap: 10px;
+    }
+    
+    #inputMsg {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      outline: none;
+    }
+    
+    #inputMsg:focus {
+      border-color: var(--primary-color);
+    }
+    
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-send {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    .btn-send:hover {
+      background-color: #3D8B40;
+    }
+    
+    #boton-borrar {
+      background-color: var(--accent-color);
+      color: white;
+    }
+    
+    #boton-borrar:hover {
+      background-color: #D32F2F;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1rem;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    
+    .hidden-feature-note {
+      background-color: #FFF8E1;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .recipes-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .chat-input-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Recetas Familiares Secretas</h1>
+    <p class="tagline">Tesoros culinarios transmitidos por generaciones</p>
+    <div class="chat-status" id="chatStatus">Chat oculto: Presiona Ctrl+Alt+M para activar</div>
+  </header>
+  
+  <main>
+    <div class="recipes-container">
+      <div class="recipe-card">
+        <div class="recipe-img">Imagen de la receta</div>
+        <div class="recipe-content">
+          <h3 class="recipe-title">Salsa Secreta de la Abuela</h3>
+          <div class="recipe-meta">
+            <span>Tiempo: 30 min</span>
+            <span>Dificultad: Media</span>
+          </div>
+          <p class="recipe-description">La salsa perfecta para pastas, con un toque especial que solo la abuela conocía.</p>
+          <a href="#" class="recipe-link">Ver receta completa</a>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-img">Imagen de la receta</div>
+        <div class="recipe-content">
+          <h3 class="recipe-title">Pastel de Chocolate Extreme</h3>
+          <div class="recipe-meta">
+            <span>Tiempo: 60 min</span>
+            <span>Dificultad: Alta</span>
+          </div>
+          <p class="recipe-description">El pastel más chocolatoso y esponjoso que hayas probado, con ingredientes secretos.</p>
+          <a href="#" class="recipe-link">Ver receta completa</a>
+        </div>
+      </div>
+      
+      <div class="recipe-card">
+        <div class="recipe-img">Imagen de la receta</div>
+        <div class="recipe-content">
+          <h3 class="recipe-title">Pan Casero con Masa Madre</h3>
+          <div class="recipe-meta">
+            <span>Tiempo: 120 min</span>
+            <span>Dificultad: Media</span>
+          </div>
+          <p class="recipe-description">La receta tradicional de pan que ha pasado por 3 generaciones en nuestra familia.</p>
+          <a href="#" class="recipe-link">Ver receta completa</a>
+        </div>
+      </div>
+    </div>
+    
+    <div id="chat">
+      <div class="chat-header">
+        <h3>Lista de Compras Secreta</h3>
+        <span id="itemCount">0 items</span>
+      </div>
+      <div id="mensajes"></div>
+      <div class="chat-input-container">
+        <input type="text" id="inputMsg" placeholder="Añade un ingrediente a la lista...">
+        <button class="btn-send" onclick="enviarMensaje()">Añadir</button>
+        <button id="boton-borrar" onclick="borrarChat()">Borrar Todo</button>
+      </div>
+      <div class="hidden-feature-note" id="featureNote">
+        Los ingredientes se guardan de forma encriptada en tu navegador. Solo tú puedes verlos.
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <p>© 2023 Recetas Familiares Secretas - Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    const CLAVE = "mi-clave-secreta-32-caracteres";
+    let chatVisible = false;
+
+    // Activar chat con Ctrl + Alt + M
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.altKey && e.key === 'm') {
+        const chat = document.getElementById('chat');
+        chatVisible = !chatVisible;
+        chat.style.display = chatVisible ? 'block' : 'none';
+        
+        const chatStatus = document.getElementById('chatStatus');
+        chatStatus.textContent = chatVisible ? 
+          "Chat de compras: ACTIVADO (Ctrl+Alt+M para ocultar)" : 
+          "Chat oculto: Presiona Ctrl+Alt+M para activar";
+          
+        document.getElementById('featureNote').style.display = chatVisible ? 'block' : 'none';
+        
+        if (chatVisible) {
+          document.getElementById('inputMsg').focus();
+        }
+      }
+    });
+
+    // Cargar mensajes al iniciar
+    window.onload = function() {
+      cargarMensajes();
+      actualizarContador();
+    };
+
+    function cargarMensajes() {
+      const mensajesEncriptados = localStorage.getItem('mensajesChat');
+      if (mensajesEncriptados) {
+        try {
+          const mensajesJSON = CryptoJS.AES.decrypt(mensajesEncriptados, CLAVE).toString(CryptoJS.enc.Utf8);
+          if (mensajesJSON) {
+            document.getElementById('mensajes').innerHTML = JSON.parse(mensajesJSON);
+          }
+        } catch (e) {
+          console.error("Error al descifrar mensajes:", e);
+          document.getElementById('mensajes').innerHTML = "<p>Error al cargar la lista. ¿Clave correcta?</p>";
+        }
+      }
+    }
+
+    function enviarMensaje() {
+      const input = document.getElementById('inputMsg');
+      const mensaje = input.value.trim();
+      if (mensaje) {
+        const mensajesDiv = document.getElementById('mensajes');
+        // Usar un formato más bonito para los mensajes
+        const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        mensajesDiv.innerHTML += `<div class="message"><strong>${timestamp}:</strong> ${mensaje}</div>`;
+        guardarMensajes();
+        input.value = '';
+        // Hacer scroll al último mensaje
+        mensajesDiv.scrollTop = mensajesDiv.scrollHeight;
+        actualizarContador();
+      }
+    }
+
+    function guardarMensajes() {
+      const mensajesHTML = document.getElementById('mensajes').innerHTML;
+      const mensajesEncriptados = CryptoJS.AES.encrypt(JSON.stringify(mensajesHTML), CLAVE).toString();
+      localStorage.setItem('mensajesChat', mensajesEncriptados);
+    }
+
+    // Función para borrar el chat
+    function borrarChat() {
+      if (confirm("¿Estás seguro de que quieres borrar toda la lista de compras?")) {
+        localStorage.removeItem('mensajesChat');
+        document.getElementById('mensajes').innerHTML = "";
+        actualizarContador();
+      }
+    }
+    
+    // Actualizar contador de items
+    function actualizarContador() {
+      const mensajesDiv = document.getElementById('mensajes');
+      const count = mensajesDiv.querySelectorAll('.message').length;
+      document.getElementById('itemCount').textContent = count + (count === 1 ? " item" : " items");
+    }
+    
+    // Permitir enviar con Enter
+    document.getElementById('inputMsg').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        enviarMensaje();
+      }
+    });
+  </script>
+</body>
+</html>
