@@ -1,20 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Recetas de Cocina</title>
+  <style>
+    body { 
+      font-family: Arial; 
+      margin: 20px; 
+      background-color: #000000; /* Fondo negro agregado */
+      color: white; /* Texto blanco para mejor contraste */
+    }
+    #chat { display: none; margin-top: 20px; }
+    #mensajes { 
+      height: 200px; 
+      border: 1px solid #ccc; 
+      overflow-y: scroll; 
+      padding: 10px; 
+      margin-bottom: 10px;
+      background-color: #1a1a1a; /* Fondo oscuro para el área de mensajes */
+      color: white; /* Texto blanco en mensajes */
+    }
+    #boton-borrar {
+      background-color: #000000;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #boton-borrar:hover {
+      background-color: #ff5252;
+    }
+    /* Estilo para el input */
+    #inputMsg {
+      background-color: #1a1a1a;
+      color: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
 <body>
-   <center><h1>Family Recipes</h1> 
-  <p>Welcome to my collection of secret recipes...</p> </center>
+   <center><h1>Recetas Familiares</h1> 
+  <p>Bienvenido a mi colección de recetas secretas...</p> </center>
 
-  <!-- Hidden Chat -->
+  <!-- Chat Oculto -->
   <div id="chat">
-    <h3>Shopping List</h3>
+    <h3>Lista de Compras</h3>
     <div id="mensajes"></div>
-    <input type="text" id="inputMsg" placeholder="Write here...">
-    <button onclick="enviarMensaje()">Send</button>
-    <button id="boton-borrar" onclick="borrarChat()">Delete Chat</button>
+    <input type="text" id="inputMsg" placeholder="Escribe aquí...">
+    <button onclick="enviarMensaje()">Enviar</button>
+    <button id="boton-borrar" onclick="borrarChat()">Borrar Chat</button>
   </div>
 
   <script>
     const CLAVE = "mi-clave-secreta-32-caracteres";
 
-    // Activate chat with Ctrl + Alt + M
+    // Activar chat con Ctrl + Alt + M
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.altKey && e.key === 'm') {
         const chat = document.getElementById('chat');
@@ -22,7 +64,7 @@
       }
     });
 
-    // Load messages on startup
+    // Cargar mensajes al iniciar
     window.onload = function() {
       cargarMensajes();
     };
@@ -54,12 +96,13 @@
       localStorage.setItem('mensajesChat', mensajesEncriptados);
     }
 
-    // Function to delete chat
+    // Función para borrar el chat
     function borrarChat() {
-      if (confirm("Delete all messages?")) {
+      if (confirm("¿Borrar todos los mensajes?")) {
         localStorage.removeItem('mensajesChat');
         document.getElementById('mensajes').innerHTML = "";
       }
     }
   </script>
 </body>
+</html>
