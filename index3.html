@@ -1,0 +1,65 @@
+<body>
+   <center><h1>Family Recipes</h1> 
+  <p>Welcome to my collection of secret recipes...</p> </center>
+
+  <!-- Hidden Chat -->
+  <div id="chat">
+    <h3>Shopping List</h3>
+    <div id="mensajes"></div>
+    <input type="text" id="inputMsg" placeholder="Write here...">
+    <button onclick="enviarMensaje()">Send</button>
+    <button id="boton-borrar" onclick="borrarChat()">Delete Chat</button>
+  </div>
+
+  <script>
+    const CLAVE = "mi-clave-secreta-32-caracteres";
+
+    // Activate chat with Ctrl + Alt + M
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.altKey && e.key === 'm') {
+        const chat = document.getElementById('chat');
+        chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
+      }
+    });
+
+    // Load messages on startup
+    window.onload = function() {
+      cargarMensajes();
+    };
+
+    function cargarMensajes() {
+      const mensajesEncriptados = localStorage.getItem('mensajesChat');
+      if (mensajesEncriptados) {
+        const mensajesJSON = CryptoJS.AES.decrypt(mensajesEncriptados, CLAVE).toString(CryptoJS.enc.Utf8);
+        if (mensajesJSON) {
+          document.getElementById('mensajes').innerHTML = JSON.parse(mensajesJSON);
+        }
+      }
+    }
+
+    function enviarMensaje() {
+      const input = document.getElementById('inputMsg');
+      const mensaje = input.value.trim();
+      if (mensaje) {
+        const mensajesDiv = document.getElementById('mensajes');
+        mensajesDiv.innerHTML += `<p>${mensaje}</p>`;
+        guardarMensajes();
+        input.value = '';
+      }
+    }
+
+    function guardarMensajes() {
+      const mensajesHTML = document.getElementById('mensajes').innerHTML;
+      const mensajesEncriptados = CryptoJS.AES.encrypt(JSON.stringify(mensajesHTML), CLAVE).toString();
+      localStorage.setItem('mensajesChat', mensajesEncriptados);
+    }
+
+    // Function to delete chat
+    function borrarChat() {
+      if (confirm("Delete all messages?")) {
+        localStorage.removeItem('mensajesChat');
+        document.getElementById('mensajes').innerHTML = "";
+      }
+    }
+  </script>
+</body>
