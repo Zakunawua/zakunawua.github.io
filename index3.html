@@ -6,8 +6,8 @@
     body { 
       font-family: Arial; 
       margin: 20px; 
-      background-color: #000000; /* Fondo negro agregado */
-      color: white; /* Texto blanco para mejor contraste */
+      background-color: #000000;
+      color: white;
     }
     #chat { display: none; margin-top: 20px; }
     #mensajes { 
@@ -16,8 +16,8 @@
       overflow-y: scroll; 
       padding: 10px; 
       margin-bottom: 10px;
-      background-color: #1a1a1a; /* Fondo oscuro para el área de mensajes */
-      color: white; /* Texto blanco en mensajes */
+      background-color: #1a1a1a;
+      color: white;
     }
     #boton-borrar {
       background-color: #000000;
@@ -30,12 +30,36 @@
     #boton-borrar:hover {
       background-color: #ff5252;
     }
-    /* Estilo para el input */
     #inputMsg {
       background-color: #1a1a1a;
       color: white;
       border: 1px solid #ccc;
       padding: 5px;
+    }
+    
+    /* Botón flotante para móviles */
+    #boton-secreto {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background-color: #000000;
+      color: white;
+      border: 2px solid #ff5252;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      display: none; /* Oculto por defecto */
+      z-index: 1000;
+      box-shadow: 0 4px 8px rgba(255, 82, 82, 0.3);
+    }
+    
+    /* Mostrar solo en móviles */
+    @media (max-width: 768px) {
+      #boton-secreto {
+        display: block;
+      }
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -43,6 +67,9 @@
 <body>
    <center><h1>Recetas Familiares</h1> 
   <p>Bienvenido a mi colección de recetas secretas...</p> </center>
+
+  <!-- Botón flotante para móviles -->
+  <button id="boton-secreto" onclick="alternarChat()">🔒</button>
 
   <!-- Chat Oculto -->
   <div id="chat">
@@ -56,11 +83,16 @@
   <script>
     const CLAVE = "mi-clave-secreta-32-caracteres";
 
-    // Activar chat con Ctrl + Alt + M
+    // Función para alternar el chat (usada por el botón móvil)
+    function alternarChat() {
+      const chat = document.getElementById('chat');
+      chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Activar chat con Ctrl + Alt + M (para desktop)
     document.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.altKey && e.key === 'm') {
-        const chat = document.getElementById('chat');
-        chat.style.display = chat.style.display === 'none' ? 'block' : 'none';
+        alternarChat();
       }
     });
 
@@ -96,7 +128,6 @@
       localStorage.setItem('mensajesChat', mensajesEncriptados);
     }
 
-    // Función para borrar el chat
     function borrarChat() {
       if (confirm("¿Borrar todos los mensajes?")) {
         localStorage.removeItem('mensajesChat');
